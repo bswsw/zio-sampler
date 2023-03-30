@@ -1,0 +1,15 @@
+###
+POST http://localhost:8080/posts
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "adadda",
+  "content": "asdsadasdsadad"
+}
+
+###
+GET http://localhost:8080/posts/123
+
+###
+GET http://localhost:8080/prometheus
