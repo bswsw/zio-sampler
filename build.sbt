@@ -51,4 +51,9 @@ libraryDependencies ++= Seq(
   "dev.zio" %% "zio-schema-macros" % `zio-schema-version`,
 
   "dev.zio" %% "zio-prelude" % `zio-prelude-version`,
+
+  //  "org.mockito" %% "mockito-scala" % "1.17.14",
+  "org.mockito" % "mockito-core" % "5.2.0" % Test,
+  "dev.zio" %% "zio-mock" % "1.0.0-RC9" % Test,
+//  "org.scalamock" %% "scalamock" % "5.1.0" % Test,
 )

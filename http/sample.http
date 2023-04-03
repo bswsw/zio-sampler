@@ -13,3 +13,6 @@ GET http://localhost:8080/posts/123
 
 ###
 GET http://localhost:8080/prometheus
+
+###
+GET http://localhost:8080/sample/123

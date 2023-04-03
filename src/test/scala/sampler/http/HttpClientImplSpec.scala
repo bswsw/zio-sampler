@@ -12,7 +12,7 @@ object HttpClientImplSpec extends ZIOSpecDefault {
       test("1 + 2") {
         assertTrue(1 + 2 == 3)
       },
-
+      
       test("http client") {
         val actual = for {
           data <- ZIO.succeed("adadada")

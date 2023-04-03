@@ -18,10 +18,9 @@ def timeTo(dateTime: LocalDateTime) = {
 
   val dayOfMonth = DayOfMonth.make(executionExpectedAt.getDayOfMonth)
 
-  val monthly = PlanExecutionPeriod.MONTHLY(dayOfMonth.get, executionExpectedTime)
+  val monthly = PlanExecutionPeriod.MONTHLY(DayOfMonth(1), executionExpectedTime)
   val weekly = PlanExecutionPeriod.WEEKLY(dateTime.getDayOfWeek.plus(1), executionExpectedTime)
   val daily = PlanExecutionPeriod.DAILY(executionExpectedTime)
-
 }
 
 
