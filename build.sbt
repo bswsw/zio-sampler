@@ -8,7 +8,10 @@ scalacOptions ++= Seq(
 )
 
 //scalaVersion := "2.13.10"
-//scalacOptions += "-Ymacro-annotations"
+//scalacOptions ++= Seq(
+//  "-Ymacro-annotations",
+//  "-Xfatal-warnings"
+//)
 
 val `zio-version` = "2.0.10"
 val `zio-logging-version` = "2.1.11"
