@@ -1,17 +1,16 @@
+val scala33 = "3.3.0-RC3"
+val scala213 = "2.13.10"
+
 name := "zio-sampler"
 
 version := "0.1.0-SNAPSHOT"
-scalaVersion := "3.3.0-RC3"
+scalaVersion := scala33
 scalacOptions ++= Seq(
   "-Wunused:imports",
   "-Xfatal-warnings"
 )
 
-//scalaVersion := "2.13.10"
-//scalacOptions ++= Seq(
-//  "-Ymacro-annotations",
-//  "-Xfatal-warnings"
-//)
+//crossScalaVersions := List(scala33, scala213)
 
 val `zio-version` = "2.0.10"
 val `zio-logging-version` = "2.1.11"
