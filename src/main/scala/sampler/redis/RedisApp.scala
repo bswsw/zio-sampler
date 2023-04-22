@@ -3,7 +3,8 @@ package sampler.redis
 import zio.*
 import zio.redis.*
 import zio.redis.embedded.*
-import zio.schema.codec.JsonCodec
+import zio.schema.Schema
+import zio.schema.codec.{BinaryCodec, JsonCodec}
 
 object RedisApp extends ZIOAppDefault {
 
@@ -17,8 +18,12 @@ object RedisApp extends ZIOAppDefault {
       .provide(
         EmbeddedRedis.layer,
         RedisExecutor.layer,
-        ZLayer.succeed(JsonCodec),
-        Redis.layer
+        Redis.layer,
+        ZLayer.succeed(
+          new CodecSupplier {
+            override def get[A: Schema]: BinaryCodec[A] = JsonCodec.schemaBasedBinaryCodec
+          },
+        ),
       )
       .debug
 

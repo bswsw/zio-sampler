@@ -1,6 +1,6 @@
 package sampler
 
-import zio.{Scope, ZIO, ZIOAppArgs, ZIOAppDefault, durationInt}
+import zio.{durationInt, Scope, ZIO, ZIOAppArgs, ZIOAppDefault}
 
 object ZIOOperatorSampleApp extends ZIOAppDefault {
 

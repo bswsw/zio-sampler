@@ -16,7 +16,7 @@ object HttpClientImplSpec extends ZIOSpecDefault {
       test("http client") {
         val actual = for {
           data <- ZIO.succeed("adadada")
-          url <- ZIO.fromEither(URL.fromString(s"http://localhost:8080/$data"))
+          url <- ZIO.fromEither(URL.decode(s"http://localhost:8080/$data"))
           _ <- TestClient.addRequestResponse(Request.get(url), Response.text("abcd"))
           sut <- ZIO.service[HttpClient]
           actual <- sut.findData(data)

@@ -15,7 +15,7 @@ object StateBContent {
 
   def apply(content: ArticleContent.B): IO[Nothing, StateBContent] = ZIO.fromEither(
     content match
-      case ArticleContent.B(None) => Right(TestingBContent())
-      case ArticleContent.B(Some(title)) => Right(ApprovedBContent(title))
+      case ArticleContent.B(None)        => Right(TestingBContent())
+      case ArticleContent.B(Some(title)) => Right(ApprovedBContent(title)),
   )
 }

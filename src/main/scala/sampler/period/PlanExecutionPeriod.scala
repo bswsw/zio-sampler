@@ -23,8 +23,6 @@ def timeTo(dateTime: LocalDateTime) = {
   val daily = PlanExecutionPeriod.DAILY(executionExpectedTime)
 }
 
-
-
 object PlanExecutionPeriod {
   case class MONTHLY(day: DayOfMonth, time: LocalTime) extends PlanExecutionPeriod {
     override def toPreparationPeriod: PlanPreparationPeriod =
@@ -39,7 +37,8 @@ object PlanExecutionPeriod {
   }
 
   case class WEEKLY(dayOfWeek: DayOfWeek, time: LocalTime) extends PlanExecutionPeriod {
-    override def toPreparationPeriod: PlanPreparationPeriod = PlanPreparationPeriod.WEEKLY(dayOfWeek.minus(1), time)
+    override def toPreparationPeriod: PlanPreparationPeriod =
+      PlanPreparationPeriod.WEEKLY(dayOfWeek.minus(1), time)
 
     override def toExecutionExpectedAt: LocalDateTime = ???
   }

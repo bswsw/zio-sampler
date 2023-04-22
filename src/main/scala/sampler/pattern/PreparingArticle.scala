@@ -16,11 +16,13 @@ object PreparingArticle {
     override def process(): IO[String, Int] = stateContent.process()
   }
 
-  case class ApprovingArticle(article: Article, stateContent: StateContent) extends PreparingArticle {
+  case class ApprovingArticle(article: Article, stateContent: StateContent)
+    extends PreparingArticle {
     override def process(): IO[String, Int] = stateContent.process()
   }
 
-  case class ApprovedArticle(article: Article, stateContent: StateContent) extends PreparingArticle {
+  case class ApprovedArticle(article: Article, stateContent: StateContent)
+    extends PreparingArticle {
     override def process(): IO[String, Int] = stateContent.process()
   }
 
@@ -29,12 +31,13 @@ object PreparingArticle {
     article <- PreparingArticle(article, stateContent)
   } yield article
 
-  private def apply(article: Article, stateContent: StateContent): IO[String, PreparingArticle] = ZIO.fromEither(
-    article.status match
-      case CREATED => Right(CreatedArticle(article, stateContent))
-      case TESTING => Right(TestingArticle(article, stateContent))
-      case APPROVING => Right(ApprovingArticle(article, stateContent))
-      case APPROVED => Right(ApprovedArticle(article, stateContent))
-      case DELETED => Left("불가능한 상태")
-  )
+  private def apply(article: Article, stateContent: StateContent): IO[String, PreparingArticle] =
+    ZIO.fromEither(
+      article.status match
+        case CREATED   => Right(CreatedArticle(article, stateContent))
+        case TESTING   => Right(TestingArticle(article, stateContent))
+        case APPROVING => Right(ApprovingArticle(article, stateContent))
+        case APPROVED  => Right(ApprovedArticle(article, stateContent))
+        case DELETED   => Left("불가능한 상태"),
+    )
 }

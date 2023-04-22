@@ -8,11 +8,13 @@ object StreamSampleApp extends ZIOAppDefault {
 
   private given parallelism: Int = 10
 
-  private val source = ZStream(1, 2, 3, 4, 5, 6, 0, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+  private val source =
+    ZStream(1, 2, 3, 4, 5, 6, 0, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 
-  private val plusPipeZIO = ZPipeline.mapZIOParUnordered[Any, Nothing, Int, ThrowableEither[Int]](parallelism) { num =>
-    ZIO.attempt(num + 2).either
-  }
+  private val plusPipeZIO =
+    ZPipeline.mapZIOParUnordered[Any, Nothing, Int, ThrowableEither[Int]](parallelism) { num =>
+      ZIO.attempt(num + 2).either
+    }
 
   private val minusPipeZIO = ZStreamUtil.eitherPipeZIO[Any, Int, Int] { num =>
     ZIO.attempt(num - 2)

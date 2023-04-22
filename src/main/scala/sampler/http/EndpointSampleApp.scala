@@ -8,10 +8,6 @@ object EndpointSampleApp extends ZIOAppDefault {
   import zio.http.*
   import zio.http.codec.HttpCodec.*
   import zio.http.endpoint.Endpoint
-  import zio.http.model.{Method, Status}
-
-  //  override val bootstrap: ZLayer[ZIOAppArgs, Any, Any] =
-  //    Runtime.removeDefaultLoggers >>> consoleJsonLogger()
 
   private val createPostEndpoint =
     Endpoint
@@ -20,13 +16,14 @@ object EndpointSampleApp extends ZIOAppDefault {
       .outError[PostCreator.Error](Status.InternalServerError)
 
   private val createPostRoute =
-    createPostEndpoint.implement(_ => PostCreator.program(PostCreator.Request("adasd", "asdasddas")))
+    createPostEndpoint.implement(_ =>
+      PostCreator.program(PostCreator.Request("adasd", "asdasddas")),
+    )
 
   private val createPostApp = createPostRoute.toApp
 
-  private val sampleApp = Http.collectZIO[Request] {
-    case Method.GET -> !! / "posts" / id =>
-      ZIO.succeed(Response.text(id))
+  private val sampleApp = Http.collectZIO[Request] { case Method.GET -> !! / "posts" / id =>
+    ZIO.succeed(Response.text(id))
   }
 
   private val server =
@@ -82,4 +79,3 @@ object PostCreator {
     given JsonCodec[Error] = DeriveJsonCodec.gen[Error]
   }
 }
-

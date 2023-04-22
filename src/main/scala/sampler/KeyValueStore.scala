@@ -21,10 +21,13 @@ object KeyValueStore {
     ZIO.serviceWithZIO[KeyValueStore[K, V, E, IO]](_.del(key))
 }
 
-case class InmemoryKeyValueStore(map: Ref[Map[String, Int]]) extends KeyValueStore[String, Int, String, IO] {
-  override def get(key: String): IO[String, Int] = map.get.map(_.get(key)).someOrFail(s"${key} not found")
+case class InmemoryKeyValueStore(map: Ref[Map[String, Int]])
+  extends KeyValueStore[String, Int, String, IO] {
+  override def get(key: String): IO[String, Int] =
+    map.get.map(_.get(key)).someOrFail(s"${key} not found")
 
-  override def set(key: String, value: Int): IO[String, Int] = map.update(_.updated(key, value)).as(value)
+  override def set(key: String, value: Int): IO[String, Int] =
+    map.update(_.updated(key, value)).as(value)
 
   override def del(key: String): IO[String, Unit] = map.update(_.removed(key))
 }

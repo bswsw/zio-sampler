@@ -19,7 +19,6 @@ object ZIOFilterSampleApp extends ZIOAppDefault:
       .filterOrDieWith(_.contains("f"))(Error4.apply)
       .logError("7")
 
-
   sealed abstract class CustomError(msg: String) extends RuntimeException(msg)
 
   case class Error1() extends CustomError("error1")
@@ -31,4 +30,3 @@ object ZIOFilterSampleApp extends ZIOAppDefault:
 
   override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] =
     program(ZIO.succeed("abcde")).debug("D E B U G")
-
