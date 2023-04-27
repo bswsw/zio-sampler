@@ -11,6 +11,12 @@ object LoggingMiddleware {
         handler: Handler[Env, Err, Request, Response],
       )(implicit trace: Trace): Handler[Env, Err, Request, Response] =
         Handler.fromFunctionZIO[Request] { request =>
+          for {
+            responseWIthDuration <- handler.runZIO(request).timed
+            (duration, response) = responseWIthDuration
+            elapsed = duration.toNanos
+          } yield ()
+          
           handler
             .runZIO(request)
             .foldZIO(
