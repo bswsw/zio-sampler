@@ -1,5 +1,6 @@
 package sampler.mongo
 
+import mongo4cats.zio.json.*
 import mongo4cats.zio.{ZMongoClient, ZMongoDatabase}
 import zio.*
 
@@ -20,6 +21,10 @@ object MongoSampleApp extends ZIOAppDefault {
     ZIO.serviceWithZIO[ZMongoClient](_.getDatabase("my-db")),
   )
 
+  private val people = ZLayer.fromZIO(
+    ZIO.serviceWithZIO[ZMongoDatabase](_.getCollectionWithCodec[Person]("person")),
+  )
+
   private val program = for {
     now <- Clock.localDateTime
     num <- Random.nextInt
@@ -31,5 +36,5 @@ object MongoSampleApp extends ZIOAppDefault {
   } yield person
 
   override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] =
-    program.provide(client, database, PersonRepositoryImpl.layer)
+    program.provide(client, database, people, PersonRepositoryImpl.layer)
 }

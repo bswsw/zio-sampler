@@ -2,8 +2,7 @@ package sampler.mongo
 
 import com.mongodb.client.result.InsertOneResult
 import mongo4cats.operations.Filter
-import mongo4cats.zio.ZMongoDatabase
-import mongo4cats.zio.json.*
+import mongo4cats.zio.ZMongoCollection
 import zio.*
 
 trait PersonRepository {
@@ -20,24 +19,19 @@ object PersonRepository {
     ZIO.serviceWithZIO[PersonRepository](_.save(person))
 }
 
-case class PersonRepositoryImpl(db: ZMongoDatabase) extends PersonRepository {
+case class PersonRepositoryImpl(people: ZMongoCollection[Person]) extends PersonRepository {
 
-  private val collection = db.getCollectionWithCodec[Person]("person")
-  override def findByKey(key: String): Task[Option[Person]] = for {
-    coll <- collection
-    person <- coll.find(Filter.eq("key", key)).first
-  } yield person
+  override def findByKey(key: String): Task[Option[Person]] =
+    people.find(Filter.eq("key", key)).first
 
-  override def save(person: Person): Task[String] = for {
-    coll <- collection
-    result <- coll.insertOne(person)
-  } yield result.objectIdValue
+  override def save(person: Person): Task[String] =
+    people.insertOne(person).map(_.objectIdValue)
 
   extension (self: InsertOneResult)
     def objectIdValue: String = self.getInsertedId.asObjectId().getValue.toString
 }
 
 object PersonRepositoryImpl {
-  val layer: URLayer[ZMongoDatabase, PersonRepository] =
+  val layer: URLayer[ZMongoCollection[Person], PersonRepository] =
     ZLayer.fromFunction(PersonRepositoryImpl(_))
 }
