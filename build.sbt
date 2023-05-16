@@ -22,6 +22,7 @@ val `zio-redis-version` = "0.2.0"
 val `zio-schema-version` = "0.4.10"
 val `zio-prelude-version` = "1.0.0-RC18"
 val `zio-metrics-connector-version` = "2.0.8"
+val `mongo4cats-zio-version` = "0.6.11"
 
 val executionRulesByScala213 = Seq(
   ExclusionRule("dev.zio", "zio-schema_2.13"),
@@ -69,4 +70,9 @@ libraryDependencies ++= Seq(
 
   // prelude
   "dev.zio" %% "zio-prelude" % `zio-prelude-version`,
+
+  // mongo
+  "io.github.kirill5k" %% "mongo4cats-zio" % `mongo4cats-zio-version`,
+  "io.github.kirill5k" %% "mongo4cats-zio-json" % `mongo4cats-zio-version`,
+  "io.github.kirill5k" %% "mongo4cats-zio-embedded" % `mongo4cats-zio-version` % Test
 )
