@@ -3,11 +3,14 @@ package sampler.mongo
 import mongo4cats.zio.json.*
 import mongo4cats.zio.{ZMongoClient, ZMongoDatabase}
 import zio.*
+import zio.json.{DeriveJsonCodec, JsonCodec}
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object MongoSampleApp extends ZIOAppDefault {
+
+  implicit val codec: JsonCodec[Person] = DeriveJsonCodec.gen[Person]
 
   private val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
 
@@ -28,12 +31,14 @@ object MongoSampleApp extends ZIOAppDefault {
   private val program = for {
     now <- Clock.localDateTime
     num <- Random.nextInt
-    key = s"KEY_${now.format(formatter)}_${num.abs}"
+    key = PersonKey(s"KEY_${now.format(formatter)}_${num.abs}")
     _ <- PersonRepository
-           .save(Person(key, "alan", "bae", LocalDateTime.now()))
+           .save(Person(key, "alan", "bae", PersonAddress("ㅁ", "ㅠ"), LocalDateTime.now()))
            .debug("inserted id")
-    person <- PersonRepository.findByKey(key).debug("person")
-  } yield person
+    _ <- PersonRepository
+           .findByKey(key)
+           .debug("person")
+  } yield ()
 
   override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] =
     program.provide(client, database, people, PersonRepositoryImpl.layer)

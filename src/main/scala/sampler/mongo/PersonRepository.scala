@@ -5,14 +5,16 @@ import mongo4cats.operations.Filter
 import mongo4cats.zio.ZMongoCollection
 import zio.*
 
+type ThisPersonKey = PersonKey
+
 trait PersonRepository {
-  def findByKey(key: String): Task[Option[Person]]
+  def findByKey(key: ThisPersonKey): Task[Option[Person]]
 
   def save(person: Person): Task[String]
 }
 
 object PersonRepository {
-  def findByKey(key: String): ZIO[PersonRepository, Throwable, Option[Person]] =
+  def findByKey(key: ThisPersonKey): ZIO[PersonRepository, Throwable, Option[Person]] =
     ZIO.serviceWithZIO[PersonRepository](_.findByKey(key))
 
   def save(person: Person): ZIO[PersonRepository, Throwable, String] =
@@ -21,7 +23,7 @@ object PersonRepository {
 
 case class PersonRepositoryImpl(people: ZMongoCollection[Person]) extends PersonRepository {
 
-  override def findByKey(key: String): Task[Option[Person]] =
+  override def findByKey(key: ThisPersonKey): Task[Option[Person]] =
     people.find(Filter.eq("key", key)).first
 
   override def save(person: Person): Task[String] =
