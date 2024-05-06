@@ -306,9 +306,46 @@ roundRobinPool ! PoisonPill
 그러면 라우터가 중지되면서 하위 라우티도 종료가 되는데, 하위 라우티가 무언가 처리중이었다면 문제가 될 수 있다.
 
 ```scala
-private val roundRobinPool = system.actorOf(RoundRobinPool(5).props(Props[Worker]), "roundRobinMaster2")
+private val roundRobinPool = system.actoㅇrOf(RoundRobinPool(5).props(Props[Worker]), "roundRobinMaster2")
 roundRobinPool ! Broadcast(PoisonPill)
 ```
 
 이렇게하면 하위 라우티 액터들은 현재 메시지를 처리한 후에 중지하게 된다. 
 
+
+
+# 디스패처
+
+## 디스패처 종류
+
+### Dispatcher
+
+여러 액터를 스레드풀에 바인딩하는 이벤트 기반의 디스패처.
+다른 디스패처가 지정되지 않으면 기본으로 사용되는 디스패처.
+executor: fork-join-executor, thread-pool-executor 사용할 수 있음.
+ExecutorServiceConfigurator를 직접 구현하여 사용할 수도 있음.
+
+### PinnedDispatcher
+
+각 액터에게 고유한 스레드를 지정하는 디스패처
+기본 executor: thread-pool-executor
+ThreadPoolExecutorConfigurator
+
+### 기본 설정
+
+https://github.com/akka/akka/blob/main/akka-actor/src/main/resources/reference.conf#L357
+
+```scala
+Dispatchers.DefaultDispatcherId
+Dispatchers.DefaultBlockingDispatcherId
+```
+
+
+# 메일박스
+
+기본 메일박스는 java.util.concurrent.ConcurrentLinkedQueue
+
+SingleConsumerOnlyUnboundedMailbox 가 더 효율적인 메일박스고 기본 메일박스로 사용할 수 있지만 BalancingDispatcher와 함께 사용할 수 없음.
+BalancingDispatcher는 deprecated 됨.
+
+일반적으로 각 액터에 자체 메일박스가 있지만 BalancingPool을 사용하면 모든 라우티가 단일 메일박스 인스턴스를 공유함.
